@@ -60,6 +60,11 @@ export const adminApi = {
   deleteOrder: (id: number) =>
     request(`/admin/orders/${id}`, { method: 'DELETE' }),
 
+  getOrders: (params: { limit?: number; offset?: number; status?: string } = {}) => {
+    const { limit = 30, offset = 0, status = 'all' } = params
+    return request(`/admin/orders?limit=${limit}&offset=${offset}&status=${status}`)
+  },
+
   getMenus: () => request('/menus'),
   createMenu: (data: any) =>
     request('/admin/menus', { method: 'POST', body: JSON.stringify(data) }),
@@ -80,6 +85,8 @@ export const adminApi = {
     }),
   stopLoadTest: () =>
     request('/admin/loadtest/stop', { method: 'POST' }),
+  getLoadTestStatus: () =>
+    request('/admin/loadtest/status'),
 }
 
 export function createSSE(path: string): EventSource {

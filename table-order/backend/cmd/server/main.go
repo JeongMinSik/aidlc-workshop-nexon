@@ -30,7 +30,14 @@ func main() {
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 
-	pool, err := pgxpool.New(context.Background(), dbURL)
+	poolConfig, err := pgxpool.ParseConfig(dbURL)
+	if err != nil {
+		log.Fatalf("Failed to parse database config: %v", err)
+	}
+	poolConfig.MaxConns = 50
+	poolConfig.MinConns = 5
+
+	pool, err := pgxpool.NewWithConfig(context.Background(), poolConfig)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
@@ -50,8 +57,9 @@ func main() {
 
 	// Initialize components
 	eventBroker := broker.NewEventBroker()
+	metricsBroker := broker.NewMetricsBroker()
 	metricsCollector := metrics.NewCollector()
-	go metricsCollector.StartBroadcast(eventBroker)
+	go metricsCollector.StartBroadcast(metricsBroker)
 
 	// Repositories
 	adminRepo := repository.NewAdminRepo(pool)
@@ -70,11 +78,11 @@ func main() {
 	// Handlers
 	authHandler := handler.NewAuthHandler(authService)
 	menuHandler := handler.NewMenuHandler(menuService)
-	orderHandler := handler.NewOrderHandler(orderService)
+	orderHandler := handler.NewOrderHandler(orderService, cfg.JWTSecret)
 	tableHandler := handler.NewTableHandler(tableService)
 	categoryHandler := handler.NewCategoryHandler(categoryService)
-	sseHandler := handler.NewSSEHandler(eventBroker, metricsCollector)
-	loadTestHandler := handler.NewLoadTestHandlerWithService(orderService)
+	sseHandler := handler.NewSSEHandler(eventBroker, metricsBroker, metricsCollector)
+	loadTestHandler := handler.NewLoadTestHandler(orderService, metricsCollector)
 
 	// Router
 	gin.SetMode(gin.ReleaseMode)
@@ -120,6 +128,7 @@ func main() {
 		admin.DELETE("/categories/:id", categoryHandler.DeleteCategory)
 
 		// Order management
+		admin.GET("/orders", orderHandler.GetAllOrders)
 		admin.PUT("/orders/:id/status", orderHandler.UpdateOrderStatus)
 		admin.DELETE("/orders/:id", orderHandler.DeleteOrder)
 

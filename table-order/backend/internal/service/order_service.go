@@ -128,3 +128,7 @@ func (s *OrderService) DeleteOrder(ctx context.Context, orderID int) error {
 
 	return nil
 }
+
+func (s *OrderService) GetAllOrdersPaginated(ctx context.Context, limit, offset int, status string) ([]model.Order, int, error) {
+	return s.orderRepo.GetAllActivePaginated(ctx, limit, offset, status)
+}

@@ -10,16 +10,24 @@ import (
 
 func AuthMiddleware(secret string, requiredRole string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var tokenString string
+
+		// Try Authorization header first
 		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "authorization header required"})
-			c.Abort()
-			return
+		if authHeader != "" {
+			tokenString = strings.TrimPrefix(authHeader, "Bearer ")
+			if tokenString == authHeader {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": "bearer token required"})
+				c.Abort()
+				return
+			}
+		} else {
+			// Fallback to query parameter (for SSE/EventSource)
+			tokenString = c.Query("token")
 		}
 
-		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-		if tokenString == authHeader {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "bearer token required"})
+		if tokenString == "" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "authorization required"})
 			c.Abort()
 			return
 		}

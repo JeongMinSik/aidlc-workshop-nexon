@@ -26,16 +26,6 @@ func (r *OrderRepo) Create(ctx context.Context, tableID int, sessionID string, i
 	}
 	defer tx.Rollback(ctx)
 
-	// Generate order number
-	today := time.Now().Format("20060102")
-	var seq int
-	err = tx.QueryRow(ctx,
-		"SELECT COUNT(*) + 1 FROM orders WHERE created_at::date = CURRENT_DATE").Scan(&seq)
-	if err != nil {
-		return nil, err
-	}
-	orderNumber := fmt.Sprintf("ORD-%s-%03d", today, seq)
-
 	// Calculate total
 	totalAmount := 0
 	for _, item := range items {
@@ -43,13 +33,22 @@ func (r *OrderRepo) Create(ctx context.Context, tableID int, sessionID string, i
 		totalAmount += menu.Price * item.Quantity
 	}
 
-	// Insert order
+	// Use nextval on the orders_id_seq to get a unique sequence number for order_number
+	today := time.Now().Format("20060102")
+	var nextID int
+	err = tx.QueryRow(ctx, "SELECT nextval('orders_id_seq')").Scan(&nextID)
+	if err != nil {
+		return nil, err
+	}
+	orderNumber := fmt.Sprintf("ORD-%s-%05d", today, nextID)
+
+	// Insert order with pre-allocated ID
 	var order model.Order
 	err = tx.QueryRow(ctx,
-		`INSERT INTO orders (table_id, session_id, order_number, status, total_amount)
-		 VALUES ($1, $2, $3, 'pending', $4)
+		`INSERT INTO orders (id, table_id, session_id, order_number, status, total_amount)
+		 VALUES ($1, $2, $3, $4, 'pending', $5)
 		 RETURNING id, table_id, session_id, order_number, status, total_amount, created_at`,
-		tableID, sessionID, orderNumber, totalAmount,
+		nextID, tableID, sessionID, orderNumber, totalAmount,
 	).Scan(&order.ID, &order.TableID, &order.SessionID, &order.OrderNumber, &order.Status, &order.TotalAmount, &order.CreatedAt)
 	if err != nil {
 		return nil, err
@@ -123,6 +122,60 @@ func (r *OrderRepo) GetAllActive(ctx context.Context) ([]model.Order, error) {
 		orders = append(orders, o)
 	}
 	return orders, nil
+}
+
+func (r *OrderRepo) GetAllActivePaginated(ctx context.Context, limit, offset int, status string) ([]model.Order, int, error) {
+	// Count total
+	countQuery := `SELECT COUNT(*) FROM orders o JOIN table_info t ON o.table_id = t.id`
+	args := []interface{}{}
+	argIdx := 1
+
+	if status != "" && status != "all" {
+		countQuery += fmt.Sprintf(" WHERE o.status = $%d", argIdx)
+		args = append(args, status)
+		argIdx++
+	}
+
+	var total int
+	err := r.pool.QueryRow(ctx, countQuery, args...).Scan(&total)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// Fetch paginated orders
+	query := `SELECT o.id, o.table_id, o.session_id, o.order_number, o.status, o.total_amount, o.created_at, t.table_number
+		 FROM orders o JOIN table_info t ON o.table_id = t.id`
+
+	fetchArgs := []interface{}{}
+	fetchArgIdx := 1
+
+	if status != "" && status != "all" {
+		query += fmt.Sprintf(" WHERE o.status = $%d", fetchArgIdx)
+		fetchArgs = append(fetchArgs, status)
+		fetchArgIdx++
+	}
+
+	query += " ORDER BY o.created_at DESC"
+	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", fetchArgIdx, fetchArgIdx+1)
+	fetchArgs = append(fetchArgs, limit, offset)
+
+	rows, err := r.pool.Query(ctx, query, fetchArgs...)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+
+	var orders []model.Order
+	for rows.Next() {
+		var o model.Order
+		err := rows.Scan(&o.ID, &o.TableID, &o.SessionID, &o.OrderNumber, &o.Status, &o.TotalAmount, &o.CreatedAt, &o.TableNumber)
+		if err != nil {
+			return nil, 0, err
+		}
+		o.Items, _ = r.getOrderItems(ctx, o.ID)
+		orders = append(orders, o)
+	}
+	return orders, total, nil
 }
 
 func (r *OrderRepo) UpdateStatus(ctx context.Context, id int, status string) (*model.Order, error) {
