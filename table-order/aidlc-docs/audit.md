@@ -164,3 +164,27 @@
 **Context**: CONSTRUCTION - NFR Design (Unit 2: Frontend) completed. No additional questions needed - all NFR decisions were clear from previous stage. Created nfr-design-patterns.md and logical-components.md.
 
 ---
+
+## Infrastructure Design (Frontend) - Plan Created
+**Timestamp**: 2026-05-06T00:20:00Z
+**User Input**: "Infrastructure Design 단계로 진행해줘"
+**AI Response**: "NFR Design 승인 확인. 커밋 완료 (b6b97d1). Infrastructure Design plan 생성 - 4개 질문 (배포 방식, CI/CD, 환경 분리, 도메인)."
+**Context**: CONSTRUCTION - Infrastructure Design (Unit 2: Frontend) started. Plan created with 4 questions.
+
+---
+
+## Infrastructure Design (Frontend) - Answers & Artifacts
+**Timestamp**: 2026-05-06T00:21:00Z
+**User Input**: "완료했어 진행해줘"
+**AI Response**: "답변 확인 (Q1:A S3+CloudFront, Q2:A GitHub Actions, Q3:B 3개 환경, Q4:A 커스텀 도메인). Infrastructure Design 산출물 생성 완료."
+**Context**: CONSTRUCTION - Infrastructure Design (Unit 2: Frontend) completed. Created infrastructure-design.md and deployment-architecture.md.
+
+---
+
+## Infrastructure Design (Frontend) - Approval
+**Timestamp**: 2026-05-06T00:22:00Z
+**User Input**: "승인해.Code Generation 단계 진행해줘"
+**AI Response**: "Infrastructure Design 승인 확인. Code Generation 단계로 진행."
+**Context**: CONSTRUCTION - Infrastructure Design approved. Proceeding to Code Generation (Unit 2: Frontend).
+
+---
