@@ -71,6 +71,15 @@ export const adminApi = {
   getCategories: () => request('/categories'),
   createCategory: (data: any) =>
     request('/admin/categories', { method: 'POST', body: JSON.stringify(data) }),
+
+  // Load test
+  startLoadTest: (vus: number = 30, duration: number = 30) =>
+    request('/admin/loadtest/start', {
+      method: 'POST',
+      body: JSON.stringify({ vus, duration }),
+    }),
+  stopLoadTest: () =>
+    request('/admin/loadtest/stop', { method: 'POST' }),
 }
 
 export function createSSE(path: string): EventSource {

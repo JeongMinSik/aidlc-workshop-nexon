@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts'
-import { Activity, DollarSign, ShoppingBag, Clock } from 'lucide-react'
+import { Activity, DollarSign, ShoppingBag, Clock, Zap, Square } from 'lucide-react'
 import { adminApi } from '../utils/api'
 
 interface Order {
@@ -25,6 +25,7 @@ export default function DashboardPage() {
   const [currentOPS, setCurrentOPS] = useState(0)
   const [totalOrders, setTotalOrders] = useState(0)
   const [totalRevenue, setTotalRevenue] = useState(0)
+  const [loadTestRunning, setLoadTestRunning] = useState(false)
   const eventSourceRef = useRef<EventSource | null>(null)
 
   useEffect(() => {
@@ -84,6 +85,25 @@ export default function DashboardPage() {
     }
   }
 
+  const handleStartLoadTest = async () => {
+    try {
+      await adminApi.startLoadTest(30, 30)
+      setLoadTestRunning(true)
+      setTimeout(() => setLoadTestRunning(false), 30000)
+    } catch (e: any) {
+      alert(e.message)
+    }
+  }
+
+  const handleStopLoadTest = async () => {
+    try {
+      await adminApi.stopLoadTest()
+      setLoadTestRunning(false)
+    } catch (e) {
+      // ignore
+    }
+  }
+
   const statusColors: Record<string, string> = {
     pending: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
     preparing: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
@@ -122,11 +142,27 @@ export default function DashboardPage() {
           <p className="text-3xl font-bold text-purple-400">₩{totalRevenue.toLocaleString()}</p>
         </div>
         <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-          <div className="flex items-center gap-2 text-slate-400 mb-1">
-            <Clock size={16} />
-            <span className="text-xs uppercase">Active Orders</span>
+          <div className="flex items-center justify-between mb-1">
+            <div className="flex items-center gap-2 text-slate-400">
+              <Zap size={16} />
+              <span className="text-xs uppercase">Load Test</span>
+            </div>
           </div>
-          <p className="text-3xl font-bold text-orange-400">{orders.filter(o => o.status !== 'completed').length}</p>
+          {!loadTestRunning ? (
+            <button
+              onClick={handleStartLoadTest}
+              className="w-full mt-1 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2"
+            >
+              <Zap size={16} /> 부하테스트 시작
+            </button>
+          ) : (
+            <button
+              onClick={handleStopLoadTest}
+              className="w-full mt-1 py-2 bg-gray-600 hover:bg-gray-700 text-white font-bold rounded-lg transition-colors flex items-center justify-center gap-2 animate-pulse"
+            >
+              <Square size={16} /> 중지 (실행중...)
+            </button>
+          )}
         </div>
       </div>
 

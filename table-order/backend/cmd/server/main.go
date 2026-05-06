@@ -74,6 +74,7 @@ func main() {
 	tableHandler := handler.NewTableHandler(tableService)
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	sseHandler := handler.NewSSEHandler(eventBroker, metricsCollector)
+	loadTestHandler := handler.NewLoadTestHandlerWithService(orderService)
 
 	// Router
 	gin.SetMode(gin.ReleaseMode)
@@ -131,6 +132,11 @@ func main() {
 		// SSE streams
 		admin.GET("/events", sseHandler.OrderEvents)
 		admin.GET("/metrics/stream", sseHandler.MetricsStream)
+
+		// Load test control
+		admin.POST("/loadtest/start", loadTestHandler.StartLoadTest)
+		admin.POST("/loadtest/stop", loadTestHandler.StopLoadTest)
+		admin.GET("/loadtest/status", loadTestHandler.GetStatus)
 	}
 
 	// Health check
