@@ -153,3 +153,13 @@ Key decisions: single Go binary, in-memory metrics, pgx+sqlc, SSE event broker, 
 **Context**: INCEPTION - Application Design approved, moving to CONSTRUCTION - Functional Design
 
 ---
+
+## Functional Design - Complete
+**Timestamp**: 2026-05-06T00:18:00Z
+**AI Response**: Generated functional design artifacts:
+- domain-entities.md (7 entities: Admin, Category, Menu, TableInfo, Order, OrderItem, OrderHistory)
+- business-rules.md (5 rule groups: Auth, Order, Table Session, Menu Management, Real-time Metrics)
+- business-logic-model.md (4 core flows + state machines + concurrency considerations)
+**Context**: CONSTRUCTION - Functional Design, Stage complete
+
+---
