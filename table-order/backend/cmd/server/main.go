@@ -15,6 +15,7 @@ import (
 	"table-order-backend/internal/metrics"
 	"table-order-backend/internal/middleware"
 	"table-order-backend/internal/repository"
+	"table-order-backend/internal/seed"
 	"table-order-backend/internal/service"
 
 	"github.com/gin-contrib/cors"
@@ -43,6 +44,9 @@ func main() {
 		log.Println("Waiting for database...")
 		time.Sleep(time.Second)
 	}
+
+	// Run seed data
+	seed.Run(pool)
 
 	// Initialize components
 	eventBroker := broker.NewEventBroker()
