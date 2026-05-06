@@ -93,20 +93,17 @@ func Run(pool *pgxpool.Pool) {
 		{1, "비빔밥", 12000, "신선한 나물과 고추장의 조화", "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400&h=400&fit=crop", 2},
 		{1, "제육덮밥", 11000, "매콤한 제육볶음을 밥 위에 듬뿍", "https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=400&fit=crop", 3},
 		{1, "우동", 9000, "진한 가쓰오부시 육수의 따뜻한 우동", "https://images.unsplash.com/photo-1618841557871-b4664fbf0cb3?w=400&h=400&fit=crop", 4},
-		{1, "김치찌개 정식", 10000, "돼지고기와 묵은지로 끓인 김치찌개 세트", "https://images.unsplash.com/photo-1607532941433-304659e8198a?w=400&h=400&fit=crop", 5},
-		{1, "볶음 우동", 10000, "야채와 함께 볶은 쫄깃한 볶음 우동", "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=400&h=400&fit=crop", 6},
-		{1, "카레라이스", 9000, "진한 일본식 카레와 따뜻한 밥", "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400&h=400&fit=crop", 7},
-		{1, "참치김밥", 7000, "고소한 참치마요가 들어간 김밥", "https://images.unsplash.com/photo-1553163147-622ab57be1c7?w=400&h=400&fit=crop", 8},
+		{1, "카레라이스", 9000, "진한 일본식 카레와 따뜻한 밥", "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=400&h=400&fit=crop", 5},
+		{1, "참치김밥", 7000, "고소한 참치마요가 들어간 김밥", "https://images.unsplash.com/photo-1553163147-622ab57be1c7?w=400&h=400&fit=crop", 6},
 
 		// 안주/사이드 (catIdx 2)
 		{2, "감자튀김", 7000, "바삭한 감자튀김과 치즈 소스", "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=400&fit=crop", 1},
 		{2, "떡볶이", 8000, "쫄깃한 떡과 매콤한 고추장 소스", "https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=400&h=400&fit=crop", 2},
 		{2, "군만두", 7000, "노릇하게 구운 고기만두 6개", "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=400&fit=crop", 3},
-		{2, "모듬 소시지", 9000, "그릴에 구운 독일식 소시지 모듬", "https://images.unsplash.com/photo-1601628828688-632f38a5a7d0?w=400&h=400&fit=crop", 4},
-		{2, "치즈볼", 6000, "겉바속촉 모짜렐라 치즈볼 6개", "https://images.unsplash.com/photo-1452195100486-9cc805987862?w=400&h=400&fit=crop", 5},
-		{2, "나초 플레이트", 8000, "바삭한 나초와 살사, 치즈 소스", "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=400&h=400&fit=crop", 6},
-		{2, "에다마메", 5000, "소금에 살짝 데친 풋콩", "https://images.unsplash.com/photo-1564894809611-1742fc40ed80?w=400&h=400&fit=crop", 7},
-		{2, "오징어튀김", 8000, "바삭하게 튀긴 오징어링", "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&h=400&fit=crop", 8},
+		{2, "치즈볼", 6000, "겉바속촉 모짜렐라 치즈볼 6개", "https://images.unsplash.com/photo-1452195100486-9cc805987862?w=400&h=400&fit=crop", 4},
+		{2, "나초 플레이트", 8000, "바삭한 나초와 살사, 치즈 소스", "https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=400&h=400&fit=crop", 5},
+		{2, "에다마메", 5000, "소금에 살짝 데친 풋콩", "https://images.unsplash.com/photo-1564894809611-1742fc40ed80?w=400&h=400&fit=crop", 6},
+		{2, "오징어튀김", 8000, "바삭하게 튀긴 오징어링", "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400&h=400&fit=crop", 7},
 
 		// 음료 (catIdx 3)
 		{3, "생맥주 500ml", 5000, "시원하게 뽑은 생맥주 한 잔", "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&h=400&fit=crop", 1},
