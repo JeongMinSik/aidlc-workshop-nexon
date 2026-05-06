@@ -317,3 +317,11 @@ logs/
 .cache/
 .temp/
 aidlc-workflows/
+
+# ============================================
+# Kiro / Playwright MCP
+# ============================================
+
+.kiro/settings/
+.playwright-mcp/
+*.png
