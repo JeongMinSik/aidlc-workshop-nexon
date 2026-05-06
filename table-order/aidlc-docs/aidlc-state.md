@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-05-06T00:00:00Z
-- **Current Stage**: INCEPTION - Units Generation (Complete)
+- **Current Stage**: CONSTRUCTION - NFR Requirements (Unit 2: Frontend) Complete
 
 ## Workspace State
 - **Existing Code**: No
@@ -31,8 +31,8 @@
 - [x] INCEPTION - Workflow Planning
 - [x] INCEPTION - Application Design
 - [x] INCEPTION - Units Generation
-- [ ] CONSTRUCTION - Functional Design
-- [ ] CONSTRUCTION - NFR Requirements
+- [x] CONSTRUCTION - Functional Design
+- [x] CONSTRUCTION - NFR Requirements
 - [ ] CONSTRUCTION - NFR Design
 - [ ] CONSTRUCTION - Infrastructure Design
 - [ ] CONSTRUCTION - Code Generation
